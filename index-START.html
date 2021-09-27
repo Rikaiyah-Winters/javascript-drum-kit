@@ -58,15 +58,27 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-//Event listener that when a certain key is pressed will trigger this function
-window.addEventListener('keydown', function(e){ //Window. represents the window in which the JS is running. One source says it's optional.
+
+function playSound(e) {
   const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
   const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
   if (!audio) return; //If audio is a falsy (if there's no matching data key present) then return nothing and stop the function from running all together
   audio.currentTime = 0; //rewinds it to the start
   audio.play();
   key.classList.add('playing')//This connects script to CSS .playing
-});
+};
+
+function removeTransition (e) {
+  if(e.propertyName !== 'transform') return; //skip if its not a transform - only focus on transform
+  this.classList.remove('playing') //removes the .playing css when the transition ends - this refers to 'key'
+}
+const keys = document.querySelectorAll('.key') //listens for all divs witht .key; creates an array of each key
+keys.forEach(key => key.addEventListener('transitionend', removeTransition)); //never seen transition end before
+
+//Event listener that when a certain key is pressed will trigger this function
+window.addEventListener('keydown', playSound); //Window. represents the window in which the JS is running. One source says it's optional.
+
+//Learned key events, playing audio, listening for transitionend event
 </script>
 
 
